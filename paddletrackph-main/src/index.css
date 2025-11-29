@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 40 25% 96%;
+    --foreground: 0 0% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+
+    /* Professional gold & red palette inspired by career platform */
+    --primary: 42 78% 52%;
+    --primary-foreground: 0 0% 10%;
+
+    --secondary: 0 63% 51%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 40 20% 92%;
+    --muted-foreground: 0 0% 45%;
+
+    --accent: 42 85% 45%;
+    --accent-foreground: 0 0% 10%;
+
+    --destructive: 0 63% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 40 15% 88%;
+    --input: 40 15% 88%;
+    --ring: 42 78% 52%;
+
+    --radius: 0.75rem;
+    
+    --success: 142 76% 36%;
+    --warning: 38 92% 50%;
+    --info: 200 85% 50%;
+    
+    /* Professional gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(42 78% 52%), hsl(42 85% 45%));
+    --gradient-secondary: linear-gradient(135deg, hsl(0 63% 51%), hsl(0 70% 45%));
+    --gradient-hero: linear-gradient(180deg, hsl(40 25% 96%), hsl(42 30% 94%));
+    
+    /* Enhanced shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.1);
+    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.1);
+    --shadow-glow: 0 0 20px hsl(42 78% 52% / 0.3);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 0 0% 10%;
+    --foreground: 40 25% 96%;
+
+    --card: 0 0% 13%;
+    --card-foreground: 40 25% 96%;
+
+    --popover: 0 0% 13%;
+    --popover-foreground: 40 25% 96%;
+
+    --primary: 42 78% 52%;
+    --primary-foreground: 0 0% 10%;
+
+    --secondary: 0 63% 51%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 65%;
+
+    --accent: 42 85% 45%;
+    --accent-foreground: 0 0% 10%;
+
+    --destructive: 0 63% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 42 78% 52%;
+    
+    --success: 142 76% 36%;
+    --warning: 38 90% 45%;
+    --info: 200 80% 45%;
+    
+    --gradient-primary: linear-gradient(135deg, hsl(42 78% 52%), hsl(42 85% 45%));
+    --gradient-secondary: linear-gradient(135deg, hsl(0 63% 51%), hsl(0 70% 45%));
+    --gradient-hero: linear-gradient(180deg, hsl(0 0% 10%), hsl(42 20% 15%));
+    
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.3);
+    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.4);
+    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.5);
+    --shadow-glow: 0 0 20px hsl(42 78% 52% / 0.4);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+}
+
+@layer utilities {
+  /* Hover effects */
+  .hover-lift {
+    @apply transition-all duration-200 ease-out;
+  }
+  
+  .hover-lift:hover {
+    @apply -translate-y-1 shadow-lg;
+  }
+  
+  .hover-glow:hover {
+    @apply shadow-glow;
+  }
+  
+  .hover-scale {
+    @apply transition-transform duration-200 ease-out;
+  }
+  
+  .hover-scale:hover {
+    @apply scale-105;
+  }
+}
