@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
-import { Target, TrendingUp, Users, BarChart3, Calendar, Star, ClipboardList, History, School, Award, Mail } from "lucide-react";
+import { Target, TrendingUp, Users, BarChart3, Calendar, Star, ClipboardList, History, School, Award, Mail, Sparkles, BookOpen, UserPlus } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -250,6 +250,18 @@ const Landing = () => {
               icon: Award,
               title: "Know Your Level",
               description: "Use a simple self assessment board based on trusted pickleball rating guidelines. Update your level anytime as you grow."
+            }, {
+              icon: Sparkles,
+              title: "Skill Assessment",
+              description: "Take a short self-assessment during signup to set your starting skill rating, badge, and progress bar. Simple, beginner-friendly, and personalised to your level."
+            }, {
+              icon: BookOpen,
+              title: "Personal Training Program",
+              description: "Receive a customised two-week training program generated from your assessment. Focus on your weak areas with drills, warm-ups, and game patterns designed for your growth."
+            }, {
+              icon: UserPlus,
+              title: "Public Profiles and Paddle Pals",
+              description: "View public profiles showing display name, username, badge, and location. Send Paddle Pal requests, accept or decline, and keep a friends list to easily invite partners to games and lobbies."
             }].map(({
               icon: Icon,
               title,
