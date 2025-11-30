@@ -50,7 +50,7 @@ export default function Signup() {
       if (data.user) {
         toast({
           title: "Success!",
-          description: "Account created. Please complete your profile."
+          description: "Account created. Let's set up your profile and assess your skill level."
         });
         navigate("/profile-setup");
       }

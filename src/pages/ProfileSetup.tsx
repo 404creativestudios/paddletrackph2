@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Loader2 } from "lucide-react";
@@ -13,7 +12,6 @@ import { Loader2 } from "lucide-react";
 export default function ProfileSetup() {
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
-  const [skillLevel, setSkillLevel] = useState("");
   const [city, setCity] = useState("");
   const [loading, setLoading] = useState(false);
   const [checkingProfile, setCheckingProfile] = useState(true);
@@ -40,7 +38,6 @@ export default function ProfileSetup() {
       if (profile) {
         setUsername(profile.username || "");
         setDisplayName(profile.display_name || "");
-        setSkillLevel(profile.skill_level || "");
         setCity(profile.city || "");
       }
     } catch (error) {
@@ -88,7 +85,6 @@ export default function ProfileSetup() {
         .update({
           username,
           display_name: displayName,
-          skill_level: skillLevel || null,
           city: city || null,
         })
         .eq("id", user?.id);
@@ -97,9 +93,9 @@ export default function ProfileSetup() {
 
       toast({
         title: "Success!",
-        description: "Profile saved successfully",
+        description: "Profile saved! Now let's assess your skill level.",
       });
-      navigate("/");
+      navigate("/self-assessment");
     } catch (error: any) {
       toast({
         title: "Error",
@@ -151,20 +147,6 @@ export default function ProfileSetup() {
                 placeholder="Your Name"
                 required
               />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="skillLevel">Skill Level</Label>
-              <Select value={skillLevel} onValueChange={setSkillLevel}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select skill level" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Beginner">Beginner</SelectItem>
-                  <SelectItem value="Intermediate">Intermediate</SelectItem>
-                  <SelectItem value="Advanced">Advanced</SelectItem>
-                  <SelectItem value="Professional">Professional</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
             <div className="space-y-2">
               <Label htmlFor="city">City</Label>

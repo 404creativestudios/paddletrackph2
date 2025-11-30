@@ -16,6 +16,8 @@ import ScheduleGame from "./pages/ScheduleGame";
 import LobbyDetail from "./pages/LobbyDetail";
 import GameHistory from "./pages/GameHistory";
 import SkillAssessment from "./pages/SkillAssessment";
+import SelfAssessment from "./pages/SelfAssessment";
+import TrainingDashboard from "./pages/TrainingDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +40,8 @@ const App = () => (
             <Route element={<MobileAppLayout />}>
               <Route path="/home" element={<Index />} />
               <Route path="/profile-setup" element={<ProfileSetup />} />
+              <Route path="/self-assessment" element={<SelfAssessment />} />
+              <Route path="/training-dashboard" element={<TrainingDashboard />} />
               <Route path="/start-game" element={<StartGame />} />
               <Route path="/schedule-game" element={<ScheduleGame />} />
               <Route path="/lobby/:lobbyId" element={<LobbyDetail />} />
