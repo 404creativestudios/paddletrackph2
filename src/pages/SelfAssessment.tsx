@@ -9,6 +9,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Loader2, ArrowLeft, ArrowRight } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 interface AssessmentData {
   experience_months: number;
@@ -165,6 +167,13 @@ export default function SelfAssessment() {
               <CardDescription>This helps us understand your experience level</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              <Alert className="border-primary/20 bg-primary/5">
+                <AlertCircle className="h-4 w-4 text-primary" />
+                <AlertDescription className="text-sm">
+                  This rating is a self assessed estimate for training purposes. It is not an official tournament rating. PaddleTrack PH uses USA Pickleball skill descriptions as a guide but adjusts for PH open play style and recreational improvement. Your rating may change as you log games.
+                </AlertDescription>
+              </Alert>
+
               {[
                 { label: "Less than 3 months", value: 0 },
                 { label: "Three to six months", value: 1 },
