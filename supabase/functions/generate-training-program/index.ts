@@ -105,57 +105,94 @@ Deno.serve(async (req: Request) => {
 });
 
 function generateTrainingProgram(profileData: any, focusAreas: string[]): string {
-  const experienceLevel = profileData.experience_months <= 1 ? "beginner" : 
-                         profileData.experience_months <= 3 ? "intermediate" : "advanced";
-  
-  let program = `**Your Two-Week Training Plan (${profileData.displayed_rating} → ${profileData.displayed_rating + 0.5})**\n\n`;
-  
-  program += `**Week 1: Build Foundation**\n`;
-  program += `- Day 1-2: Focus on ${focusAreas[0]} fundamentals. Practice slow, controlled repetitions.\n`;
-  program += `- Day 3-4: Work on ${focusAreas[1]}. Combine with footwork drills.\n`;
-  program += `- Day 5-6: Integrate ${focusAreas[2]} into live play situations.\n`;
-  program += `- Day 7: Rest and video review.\n\n`;
-  
-  program += `**Week 2: Apply and Refine**\n`;
-  program += `- Day 1-2: Combine all three focus areas in drills.\n`;
-  program += `- Day 3-4: Practice game scenarios emphasizing ${focusAreas[0]} and ${focusAreas[1]}.\n`;
-  program += `- Day 5-6: Play matches focusing on consistency over power.\n`;
-  program += `- Day 7: Self-assessment and goal adjustment.\n\n`;
-  
-  program += `**Key Principles:**\n`;
-  program += `- Warm up for 10 minutes before each session\n`;
-  program += `- Focus on form over speed initially\n`;
-  program += `- Record progress in a journal\n`;
-  program += `- Play with ${experienceLevel === "beginner" ? "patient partners" : "players at or slightly above your level"}\n`;
-  
+  const frequencyAdjustment = profileData.frequency_per_week <= 1
+    ? "Practice these drills during your weekly session. Focus on quality over quantity."
+    : profileData.frequency_per_week <= 2
+    ? "Split these modules across your sessions. Take your time with each drill."
+    : "You can progress through modules faster. Practice 1-2 modules per session.";
+
+  let program = `**Your Progress-Based Training Program**\n`;
+  program += `Target: ${profileData.displayed_rating} → ${profileData.displayed_rating + 0.5}\n\n`;
+
+  program += `**Top Three Focus Areas**\n`;
+  focusAreas.forEach((area, index) => {
+    program += `${index + 1}. ${area}\n`;
+  });
+  program += `\n${frequencyAdjustment}\n\n`;
+
+  program += `**Module 1: Foundation - ${focusAreas[0]}**\n`;
+  program += `**Purpose:** Build basic control and consistency in ${focusAreas[0]}.\n`;
+  program += `**Drills:**\n`;
+  program += `- Start with slow, controlled repetitions focusing on form\n`;
+  program += `- Practice 10-15 reps per session when you play\n`;
+  program += `- Record successful attempts vs total attempts\n`;
+  program += `**Move to next module when:** You can complete 8 out of 10 attempts with good form.\n\n`;
+
+  program += `**Module 2: Consistency - ${focusAreas[1]}**\n`;
+  program += `**Purpose:** Develop reliable ${focusAreas[1]} that you can use in games.\n`;
+  program += `**Drills:**\n`;
+  program += `- Combine ${focusAreas[1]} with footwork patterns\n`;
+  program += `- Practice 15-20 reps per session\n`;
+  program += `- Focus on maintaining form under movement\n`;
+  program += `**Move to next module when:** You can maintain good form while moving and complete 10 consecutive good attempts.\n\n`;
+
+  program += `**Module 3: Application - ${focusAreas[2]}**\n`;
+  program += `**Purpose:** Use ${focusAreas[2]} effectively in live play situations.\n`;
+  program += `**Drills:**\n`;
+  program += `- Practice in game-like scenarios with a partner\n`;
+  program += `- Start with cooperative drills, then add light competition\n`;
+  program += `- Track success rate during actual games\n`;
+  program += `**Move to next module when:** You successfully use this skill 6 out of 10 times in real game situations.\n\n`;
+
+  program += `**Module 4: Integration**\n`;
+  program += `**Purpose:** Combine all three focus areas smoothly in match play.\n`;
+  program += `**Drills:**\n`;
+  program += `- Play practice games focusing on using all three skills\n`;
+  program += `- Ask your practice partner to create situations where you need each skill\n`;
+  program += `- Keep a simple tally of successful uses during games\n`;
+  program += `**Move to next module when:** You feel confident using all three skills without thinking about them too much.\n\n`;
+
+  program += `**Module 5: Refinement**\n`;
+  program += `**Purpose:** Polish your skills and prepare for the next rating level.\n`;
+  program += `**Drills:**\n`;
+  program += `- Play against players at or slightly above your level\n`;
+  program += `- Focus on consistency over power\n`;
+  program += `- Practice reading opponents and adjusting your strategy\n`;
+  program += `**Move to next module when:** You win more than half your games at your current level and feel ready to challenge yourself further.\n\n`;
+
+  program += `**Important Recommendation**\n`;
+  program += `Consider consulting a qualified pickleball coach to verify your skills or receive expert guidance. Drills may vary depending on your physical condition, environment, and actual performance. A coach can provide personalized feedback and adjustments tailored to your specific needs.\n`;
+
   return program;
 }
 
 function generateDrills(focusAreas: string[]): string {
   const drillMap: Record<string, string> = {
-    "Serve": "**Serve Practice**: Set up targets in service boxes. Aim for 8/10 successful serves to each target. Focus on consistent toss and smooth swing.",
-    "Return": "**Return Drill**: Have partner serve to you. Focus on returning deep to baseline. Alternate forehand and backhand returns.",
-    "Dinks": "**Dinking Ladder**: Start at kitchen line. Dink cross-court for 20 consecutive shots. Then try straight-ahead dinks. Focus on soft touch and control.",
-    "Drops": "**Third Shot Drop**: Position at baseline. Partner feeds from kitchen. Practice drops to land in kitchen zone. Aim for 10 good drops in a row.",
-    "Resets": "**Reset Drill**: Partner hits fast balls from kitchen. Practice resetting to soft dinks. Focus on absorbing pace.",
-    "Volleys": "**Volley Wall**: Partner feeds fast balls. Block back with firm wrist. Alternate forehand and backhand volleys.",
-    "Hand speed": "**Reaction Drill**: Stand at kitchen. Partner hits quick shots at you. Practice fast hands and short backswing.",
-    "Lobs": "**Lob Targets**: Set targets at baseline. Practice offensive and defensive lobs. Focus on height and depth.",
-    "Speedups": "**Attack Drill**: Partner feeds high balls. Practice speedups to feet and middle. Focus on timing.",
-    "Positioning": "**Court Awareness**: Play points focusing only on position. After each shot, move to optimal spot before next shot.",
-    "Anticipation": "**Read and React**: Partner alternates shots. Practice reading paddle angle and body position to anticipate next shot.",
+    "Serve": "**Serve Practice**: Place targets in service boxes. Aim for consistent placement. Practice 10-15 serves per session. Target 8 out of 10 successful before moving to next drill.",
+    "Return": "**Return Drill**: Partner serves to you. Focus on returning deep. Practice both forehand and backhand. Repeat 15-20 times per session.",
+    "Dinks": "**Dinking Control**: Start at kitchen line. Dink cross-court aiming for consistency. Try for 10-15 consecutive soft touches. Move to straight dinks when ready.",
+    "Drops": "**Third Shot Drop**: Start at baseline. Partner feeds from kitchen. Drop the ball into the kitchen zone. Aim for 10 good drops per session.",
+    "Resets": "**Reset Drill**: Partner hits fast balls from kitchen. Practice absorbing pace and resetting to soft shots. Focus on control over power.",
+    "Volleys": "**Volley Practice**: Partner feeds medium-paced balls. Block back with firm wrist and compact swing. Alternate sides. 15-20 reps per session.",
+    "Hand speed": "**Quick Hands Drill**: Stand at kitchen line. Partner hits quick shots. Practice short backswing and fast reaction. 10-15 reps when you play.",
+    "Lobs": "**Lob Control**: Practice both defensive and offensive lobs. Focus on height and depth. Aim for baseline targets. 10-12 attempts per session.",
+    "Speedups": "**Attack Practice**: Partner feeds high or floating balls. Practice speedups aiming at feet or middle. Focus on timing and placement over pure power.",
+    "Positioning": "**Court Position Drill**: Play practice points. After each shot, check your position. Focus on moving to the right spot. Do this during regular games.",
+    "Anticipation": "**Read and React**: Watch your partner's paddle and body. Try to predict the next shot. Practice this awareness during every session.",
   };
-  
-  let drills = "**Recommended Drills for Your Focus Areas:**\n\n";
-  
+
+  let drills = "**Recommended Drills:**\n\n";
+
   focusAreas.forEach((area, index) => {
-    drills += `${index + 1}. ${drillMap[area] || "Practice " + area + " fundamentals with a partner."}\n\n`;
+    drills += `${index + 1}. ${drillMap[area] || "Practice " + area + " with focus on form and consistency."}\n\n`;
   });
-  
-  drills += "**General Warm-up (before each session):**\n";
-  drills += "- 5 minutes of dynamic stretching\n";
-  drills += "- 3 minutes of footwork patterns (split-step, side shuffle)\n";
-  drills += "- 2 minutes of paddle work (wrist rolls, shadow swings)\n";
-  
+
+  drills += "**Warm-up (5-10 minutes before each session):**\n";
+  drills += "- Light stretching of shoulders, arms, and legs\n";
+  drills += "- Basic footwork patterns: side shuffle, split-step practice\n";
+  drills += "- Gentle paddle swings and wrist rolls\n\n";
+
+  drills += "**Remember:** Quality matters more than quantity. Focus on good form, then gradually increase speed and difficulty.\n";
+
   return drills;
 }
