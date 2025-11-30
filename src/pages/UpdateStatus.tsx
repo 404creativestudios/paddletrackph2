@@ -15,7 +15,6 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import MobileAppLayout from "@/components/MobileAppLayout";
 
 const STATUS_OPTIONS = [
   { value: "none", label: "No active status" },
@@ -112,22 +111,19 @@ export default function UpdateStatus() {
 
   if (initializing) {
     return (
-      <MobileAppLayout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        </div>
-      </MobileAppLayout>
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
     );
   }
 
   return (
-    <MobileAppLayout>
-      <div className="space-y-6">
+    <div className="space-y-6">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/home")}
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
@@ -205,6 +201,5 @@ export default function UpdateStatus() {
           </ul>
         </div>
       </div>
-    </MobileAppLayout>
   );
 }

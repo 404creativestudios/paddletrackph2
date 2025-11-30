@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Loader2, ExternalLink, User, Users } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import MobileAppLayout from "@/components/MobileAppLayout";
 
 type ActivityItem = {
   id: string;
@@ -190,24 +189,21 @@ export default function ActivityFeed() {
 
   if (loading) {
     return (
-      <MobileAppLayout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        </div>
-      </MobileAppLayout>
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
     );
   }
 
   const filteredActivities = getFilteredActivities();
 
   return (
-    <MobileAppLayout>
-      <div className="space-y-6">
+    <div className="space-y-6">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/home")}
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
@@ -244,7 +240,6 @@ export default function ActivityFeed() {
             )}
           </TabsContent>
         </Tabs>
-      </div>
-    </MobileAppLayout>
+    </div>
   );
 }
