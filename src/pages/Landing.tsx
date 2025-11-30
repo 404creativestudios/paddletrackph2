@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
-import { Target, TrendingUp, Users, BarChart3, Calendar, Star, ClipboardList, History, Mail, Sparkles, BookOpen, UserPlus } from "lucide-react";
+import { Target, TrendingUp, Users, BarChart3, Calendar, Star, ClipboardList, History, Mail, Sparkles, BookOpen, UserPlus, Award } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
