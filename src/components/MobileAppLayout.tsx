@@ -1,5 +1,5 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { Home, Plus, History, User } from "lucide-react";
+import { Home, Plus, History, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function MobileAppLayout() {
@@ -10,7 +10,7 @@ export default function MobileAppLayout() {
     { icon: Home, label: "Home", path: "/home" },
     { icon: Plus, label: "Record", path: "/start-game" },
     { icon: History, label: "History", path: "/history" },
-    { icon: User, label: "Profile", path: "/profile-setup" },
+    { icon: Users, label: "Pals", path: "/paddle-pals" },
   ];
 
   const isActive = (path: string) => {

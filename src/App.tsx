@@ -18,6 +18,11 @@ import GameHistory from "./pages/GameHistory";
 import SkillAssessment from "./pages/SkillAssessment";
 import SelfAssessment from "./pages/SelfAssessment";
 import TrainingDashboard from "./pages/TrainingDashboard";
+import SearchPlayers from "./pages/SearchPlayers";
+import PublicProfile from "./pages/PublicProfile";
+import EditProfile from "./pages/EditProfile";
+import PaddlePalRequests from "./pages/PaddlePalRequests";
+import PaddlePalsList from "./pages/PaddlePalsList";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +47,11 @@ const App = () => (
               <Route path="/profile-setup" element={<ProfileSetup />} />
               <Route path="/self-assessment" element={<SelfAssessment />} />
               <Route path="/training-dashboard" element={<TrainingDashboard />} />
+              <Route path="/search-players" element={<SearchPlayers />} />
+              <Route path="/profile/:userId" element={<PublicProfile />} />
+              <Route path="/edit-profile" element={<EditProfile />} />
+              <Route path="/paddle-pal-requests" element={<PaddlePalRequests />} />
+              <Route path="/paddle-pals" element={<PaddlePalsList />} />
               <Route path="/start-game" element={<StartGame />} />
               <Route path="/schedule-game" element={<ScheduleGame />} />
               <Route path="/lobby/:lobbyId" element={<LobbyDetail />} />

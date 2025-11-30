@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import QuickAddPlayer from "@/components/QuickAddPlayer";
+import InvitePaddlePals from "@/components/InvitePaddlePals";
 
 interface LobbyData {
   id: string;
@@ -745,6 +746,15 @@ export default function LobbyDetail() {
               />
             </CardContent>
           </Card>
+        )}
+
+        {/* Invite Paddle Pals */}
+        {isCreator && lobby.status === "pending" && (
+          <InvitePaddlePals
+            lobbyId={lobbyId!}
+            currentPlayers={players.map(p => p.user_id).filter(Boolean) as string[]}
+            onPlayerAdded={loadLobbyData}
+          />
         )}
 
         {/* Approve Score - Only for Tournaments and non-guest registered players */}

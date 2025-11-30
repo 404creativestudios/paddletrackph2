@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Trophy, Target, TrendingUp, Calendar, LogOut, Zap, Clock, MapPin, Award } from "lucide-react";
+import { Loader2, Trophy, Target, TrendingUp, Calendar, LogOut, Zap, Clock, MapPin, Award, Users, Search, UserPlus, Bell } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 interface Profile {
   username: string;
@@ -55,6 +55,7 @@ export default function Home() {
   const [scheduledGames, setScheduledGames] = useState<PendingGame[]>([]);
   const [loading, setLoading] = useState(true);
   const [showScheduledReminder, setShowScheduledReminder] = useState(false);
+  const [paddlePalRequestsCount, setPaddlePalRequestsCount] = useState(0);
   useEffect(() => {
     if (user) {
       loadData();
@@ -135,6 +136,14 @@ export default function Home() {
         });
         setShowScheduledReminder(hasGameToday);
       }
+
+      const { data: requestsData, count } = await supabase
+        .from("paddle_pals")
+        .select("*", { count: "exact", head: true })
+        .eq("receiver_id", user.id)
+        .eq("status", "pending");
+
+      setPaddlePalRequestsCount(count || 0);
     } catch (error: any) {
       toast({
         title: "Error",
@@ -303,6 +312,35 @@ export default function Home() {
             </div>
           </div>}
 
+        {/* Paddle Pals Quick Actions */}
+        <div className="space-y-3">
+          <h2 className="text-lg font-bold text-foreground flex items-center gap-2 px-1">
+            <Users className="h-5 w-5 text-primary" />
+            Paddle Pals
+          </h2>
+          <div className="grid grid-cols-2 gap-3">
+            <Card className="active:scale-95 cursor-pointer bg-card border-border shadow-sm transition-transform"
+              onClick={() => navigate("/search-players")}>
+              <CardContent className="p-4 text-center">
+                <Search className="h-6 w-6 text-primary mx-auto mb-2" />
+                <p className="text-sm font-medium">Find Players</p>
+              </CardContent>
+            </Card>
+            <Card className="active:scale-95 cursor-pointer bg-card border-border shadow-sm transition-transform relative"
+              onClick={() => navigate("/paddle-pal-requests")}>
+              <CardContent className="p-4 text-center">
+                {paddlePalRequestsCount > 0 && (
+                  <Badge className="absolute top-2 right-2 h-5 w-5 p-0 flex items-center justify-center bg-destructive text-xs">
+                    {paddlePalRequestsCount}
+                  </Badge>
+                )}
+                <Bell className="h-6 w-6 text-primary mx-auto mb-2" />
+                <p className="text-sm font-medium">Requests</p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
         {/* Quick Action - Floating Button Style */}
         <div className="space-y-3">
           <Button size="lg" onClick={() => navigate("/schedule-game")} className="w-full h-12 text-base font-semibold active:scale-95 transition-transform shadow-md bg-gradient-primary">
@@ -359,7 +397,8 @@ export default function Home() {
         )}
 
         {/* Profile Quick Info */}
-        {profile && <Card className="bg-card border-border shadow-sm">
+        {profile && <Card className="bg-card border-border shadow-sm cursor-pointer active:scale-95 transition-transform"
+          onClick={() => navigate("/edit-profile")}>
             <CardContent className="p-4">
               <div className="space-y-3">
                 <div className="flex items-start justify-between">
@@ -377,6 +416,7 @@ export default function Home() {
                       </Badge>}
                   </div>
                 </div>
+                <p className="text-xs text-muted-foreground">Tap to edit profile</p>
               </div>
             </CardContent>
           </Card>}
