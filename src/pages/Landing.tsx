@@ -92,7 +92,7 @@ const Landing = () => {
               </p>
             </div>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              PaddleTrack helps players record sessions, understand their progress, and grow at their own pace. 
+              PaddleTrack PH helps players record sessions, understand their progress, and grow at their own pace.
               Beginners, lifestyle players, coaches, and clubs can use it to make every practice meaningful.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
