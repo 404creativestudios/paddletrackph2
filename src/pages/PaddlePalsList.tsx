@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, ArrowLeft, Users, MapPin, Award } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { formatDistanceToNow } from "date-fns";
 
 interface PaddlePal {
   id: string;
@@ -14,7 +15,28 @@ interface PaddlePal {
   display_name: string;
   badge_name: string | null;
   city: string | null;
+  status: string | null;
+  status_location: string | null;
+  status_updated_at: string | null;
 }
+
+const STATUS_LABELS: Record<string, string> = {
+  looking_partner: "Looking for partner",
+  looking_one_more: "Looking for one more player",
+  hosting_open_play: "Hosting open play",
+  looking_open_play: "Looking for open play",
+  looking_coach: "Looking for coach",
+  looking_court: "Looking for court",
+};
+
+const STATUS_COLORS: Record<string, string> = {
+  looking_partner: "bg-blue-500",
+  looking_one_more: "bg-purple-500",
+  hosting_open_play: "bg-green-500",
+  looking_open_play: "bg-orange-500",
+  looking_coach: "bg-pink-500",
+  looking_court: "bg-yellow-500",
+};
 
 export default function PaddlePalsList() {
   const [pals, setPals] = useState<PaddlePal[]>([]);
@@ -39,7 +61,10 @@ export default function PaddlePalsList() {
             username,
             display_name,
             badge_name,
-            city
+            city,
+            status,
+            status_location,
+            status_updated_at
           )
         `)
         .eq("sender_id", user.id)
@@ -55,7 +80,10 @@ export default function PaddlePalsList() {
             username,
             display_name,
             badge_name,
-            city
+            city,
+            status,
+            status_location,
+            status_updated_at
           )
         `)
         .eq("receiver_id", user.id)
@@ -68,7 +96,11 @@ export default function PaddlePalsList() {
         ...(receivedConnections?.map((c: any) => c.sender) || []),
       ];
 
-      allPals.sort((a, b) => a.display_name.localeCompare(b.display_name));
+      allPals.sort((a, b) => {
+        const aTime = a.status_updated_at ? new Date(a.status_updated_at).getTime() : 0;
+        const bTime = b.status_updated_at ? new Date(b.status_updated_at).getTime() : 0;
+        return bTime - aTime;
+      });
 
       setPals(allPals);
     } catch (error: any) {
@@ -131,7 +163,7 @@ export default function PaddlePalsList() {
                 onClick={() => navigate(`/profile/${pal.id}`)}
               >
                 <CardContent className="p-4">
-                  <div className="flex items-start justify-between">
+                  <div className="flex items-start justify-between mb-3">
                     <div className="space-y-1">
                       <h3 className="font-bold text-lg">{pal.display_name}</h3>
                       <p className="text-sm text-muted-foreground">@{pal.username}</p>
@@ -149,6 +181,27 @@ export default function PaddlePalsList() {
                       </Badge>
                     )}
                   </div>
+
+                  {pal.status && pal.status !== "none" && (
+                    <div className="pt-3 border-t space-y-2">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full ${STATUS_COLORS[pal.status] || "bg-gray-500"}`} />
+                        <span className="text-sm font-medium">
+                          {STATUS_LABELS[pal.status] || pal.status}
+                        </span>
+                      </div>
+                      {pal.status_location && (
+                        <p className="text-xs text-muted-foreground">
+                          📍 {pal.status_location}
+                        </p>
+                      )}
+                      {pal.status_updated_at && (
+                        <p className="text-xs text-muted-foreground">
+                          {formatDistanceToNow(new Date(pal.status_updated_at), { addSuffix: true })}
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             ))}

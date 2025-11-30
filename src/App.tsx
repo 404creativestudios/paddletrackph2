@@ -23,6 +23,8 @@ import PublicProfile from "./pages/PublicProfile";
 import EditProfile from "./pages/EditProfile";
 import PaddlePalRequests from "./pages/PaddlePalRequests";
 import PaddlePalsList from "./pages/PaddlePalsList";
+import UpdateStatus from "./pages/UpdateStatus";
+import ActivityFeed from "./pages/ActivityFeed";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -52,6 +54,8 @@ const App = () => (
               <Route path="/edit-profile" element={<EditProfile />} />
               <Route path="/paddle-pal-requests" element={<PaddlePalRequests />} />
               <Route path="/paddle-pals" element={<PaddlePalsList />} />
+              <Route path="/update-status" element={<UpdateStatus />} />
+              <Route path="/activity-feed" element={<ActivityFeed />} />
               <Route path="/start-game" element={<StartGame />} />
               <Route path="/schedule-game" element={<ScheduleGame />} />
               <Route path="/lobby/:lobbyId" element={<LobbyDetail />} />

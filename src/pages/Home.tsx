@@ -5,7 +5,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Trophy, Target, TrendingUp, Calendar, LogOut, Zap, Clock, MapPin, Award, Users, Search, UserPlus, Bell } from "lucide-react";
+import { Loader2, Trophy, Target, TrendingUp, Calendar, LogOut, Zap, Clock, MapPin, Award, Users, Search, UserPlus, Bell, Activity, Edit } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 interface Profile {
   username: string;
@@ -17,7 +18,20 @@ interface Profile {
   badge_name: string | null;
   progress_percent: number | null;
   self_assessment_complete: boolean | null;
+  status: string | null;
+  status_location: string | null;
+  status_link: string | null;
+  status_updated_at: string | null;
 }
+
+const STATUS_LABELS: Record<string, string> = {
+  looking_partner: "Looking for partner",
+  looking_one_more: "Looking for one more player",
+  hosting_open_play: "Hosting open play",
+  looking_open_play: "Looking for open play",
+  looking_coach: "Looking for coach",
+  looking_court: "Looking for court",
+};
 interface Stats {
   totalGames: number;
   wins: number;
@@ -56,6 +70,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [showScheduledReminder, setShowScheduledReminder] = useState(false);
   const [paddlePalRequestsCount, setPaddlePalRequestsCount] = useState(0);
+  const [showPalActivityNotification, setShowPalActivityNotification] = useState(false);
   useEffect(() => {
     if (user) {
       loadData();
@@ -144,6 +159,32 @@ export default function Home() {
         .eq("status", "pending");
 
       setPaddlePalRequestsCount(count || 0);
+
+      const { data: paddlePals, error: palsError } = await supabase
+        .from("paddle_pals")
+        .select("pal_id")
+        .eq("user_id", user.id)
+        .eq("status", "accepted");
+
+      if (!palsError && paddlePals) {
+        const paddlePalIds = paddlePals.map((p) => p.pal_id);
+
+        if (paddlePalIds.length > 0) {
+          const fourHoursAgo = new Date();
+          fourHoursAgo.setHours(fourHoursAgo.getHours() - 4);
+
+          const { data: recentActivity } = await supabase
+            .from("profiles")
+            .select("id")
+            .in("id", paddlePalIds)
+            .neq("status", "none")
+            .not("status", "is", null)
+            .gte("status_updated_at", fourHoursAgo.toISOString())
+            .limit(1);
+
+          setShowPalActivityNotification((recentActivity?.length || 0) > 0);
+        }
+      }
     } catch (error: any) {
       toast({
         title: "Error",
@@ -186,6 +227,66 @@ export default function Home() {
               <p className="text-foreground font-medium">You have a game scheduled today!</p>
             </CardContent>
           </Card>}
+
+        {/* Paddle Pals Activity Notification */}
+        {showPalActivityNotification && <Card className="bg-green-500/10 border-green-500 cursor-pointer active:scale-95 transition-transform"
+          onClick={() => navigate("/activity-feed")}>
+            <CardContent className="p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Activity className="h-5 w-5 text-green-500" />
+                <p className="text-foreground font-medium">Your Paddle Pals are active now</p>
+              </div>
+              <Button size="sm" variant="outline">
+                View Feed
+              </Button>
+            </CardContent>
+          </Card>}
+
+        {/* Status Card */}
+        <Card className="bg-card border-border shadow-sm">
+          <CardContent className="p-4">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex-1 min-w-0">
+                <h3 className="text-sm font-semibold text-muted-foreground mb-2">Your Status</h3>
+                {profile?.status && profile.status !== "none" ? (
+                  <div className="space-y-2">
+                    <p className="font-medium text-base">
+                      {STATUS_LABELS[profile.status] || profile.status}
+                    </p>
+                    {profile.status_location && (
+                      <p className="text-sm text-muted-foreground">
+                        📍 {profile.status_location}
+                      </p>
+                    )}
+                    {profile.status_updated_at && (
+                      <p className="text-xs text-muted-foreground">
+                        Updated {formatDistanceToNow(new Date(profile.status_updated_at), { addSuffix: true })}
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">You have no active status</p>
+                )}
+              </div>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => navigate("/update-status")}
+              >
+                <Edit className="h-4 w-4" />
+              </Button>
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              className="w-full"
+              onClick={() => navigate("/activity-feed")}
+            >
+              <Activity className="h-4 w-4 mr-2" />
+              View Activity Feed
+            </Button>
+          </CardContent>
+        </Card>
 
         {/* Stats Dashboard */}
         <div className="space-y-3">
