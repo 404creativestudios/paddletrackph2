@@ -93,9 +93,9 @@ export default function ProfileSetup() {
 
       toast({
         title: "Success!",
-        description: "Profile saved! Now let's assess your skill level.",
+        description: "Profile saved successfully!",
       });
-      navigate("/self-assessment");
+      navigate("/home");
     } catch (error: any) {
       toast({
         title: "Error",

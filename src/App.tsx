@@ -15,8 +15,6 @@ import StartGame from "./pages/StartGame";
 import ScheduleGame from "./pages/ScheduleGame";
 import LobbyDetail from "./pages/LobbyDetail";
 import GameHistory from "./pages/GameHistory";
-import SkillAssessment from "./pages/SkillAssessment";
-import SelfAssessment from "./pages/SelfAssessment";
 import TrainingDashboard from "./pages/TrainingDashboard";
 import SearchPlayers from "./pages/SearchPlayers";
 import PublicProfile from "./pages/PublicProfile";
@@ -45,7 +43,6 @@ const App = () => (
             <Route element={<MobileAppLayout />}>
               <Route path="/home" element={<Index />} />
               <Route path="/profile-setup" element={<ProfileSetup />} />
-              <Route path="/self-assessment" element={<SelfAssessment />} />
               <Route path="/training-dashboard" element={<TrainingDashboard />} />
               <Route path="/search-players" element={<SearchPlayers />} />
               <Route path="/profile/:userId" element={<PublicProfile />} />

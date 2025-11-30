@@ -15,7 +15,6 @@ interface Profile {
   badge_name: string | null;
   city: string | null;
   is_profile_public: boolean;
-  displayed_rating: number | null;
 }
 
 type PaddlePalStatus = "none" | "pending_sent" | "pending_received" | "accepted";
@@ -43,7 +42,7 @@ export default function PublicProfile() {
     try {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, username, display_name, badge_name, city, is_profile_public, displayed_rating")
+        .select("id, username, display_name, badge_name, city, is_profile_public")
         .eq("id", userId)
         .single();
 
@@ -242,15 +241,6 @@ export default function PublicProfile() {
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <MapPin className="h-4 w-4" />
                   <span>{profile.city}</span>
-                </div>
-              )}
-
-              {profile.displayed_rating && (
-                <div className="flex items-center gap-2">
-                  <span className="text-muted-foreground">Rating:</span>
-                  <span className="text-2xl font-bold text-primary">
-                    {profile.displayed_rating}
-                  </span>
                 </div>
               )}
             </div>

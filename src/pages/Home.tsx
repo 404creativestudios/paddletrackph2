@@ -5,18 +5,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Trophy, Target, TrendingUp, Calendar, LogOut, Zap, Clock, MapPin, Award, Users, Search, UserPlus, Bell } from "lucide-react";
+import { Loader2, Trophy, Target, TrendingUp, Calendar, LogOut, Zap, Clock, MapPin, Users, Search, UserPlus, Bell } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 interface Profile {
   username: string;
   display_name: string;
   skill_level: string | null;
   city: string | null;
-  self_assessed_level: string | null;
-  displayed_rating: number | null;
-  badge_name: string | null;
-  progress_percent: number | null;
-  self_assessment_complete: boolean | null;
 }
 interface Stats {
   totalGames: number;
@@ -349,52 +344,6 @@ export default function Home() {
           </Button>
         </div>
 
-        {/* Rating & Training Card */}
-        {profile && profile.self_assessment_complete && profile.displayed_rating ? (
-          <Card
-            className="bg-gradient-primary text-white border-0 shadow-glow cursor-pointer active:scale-95 transition-transform"
-            onClick={() => navigate("/training-dashboard")}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white/80 text-xs mb-1">Your Rating</p>
-                  <p className="text-4xl font-bold">{profile.displayed_rating}</p>
-                </div>
-                <Badge className="bg-white/20 hover:bg-white/30 text-white border-0 text-sm px-3 py-1">
-                  {profile.badge_name}
-                </Badge>
-              </div>
-              {profile.progress_percent !== null && (
-                <div className="mt-3 space-y-1">
-                  <div className="flex justify-between text-xs text-white/80">
-                    <span>Progress</span>
-                    <span>{profile.progress_percent}%</span>
-                  </div>
-                  <div className="w-full h-2 bg-white/20 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-white transition-all duration-300"
-                      style={{ width: `${profile.progress_percent}%` }}
-                    />
-                  </div>
-                </div>
-              )}
-              <p className="text-xs text-white/70 mt-2">Tap to view training plan</p>
-            </CardContent>
-          </Card>
-        ) : (
-          <Card className="bg-primary/10 border-primary cursor-pointer active:scale-95 transition-transform"
-            onClick={() => navigate("/self-assessment")}>
-            <CardContent className="p-4 text-center">
-              <Award className="h-8 w-8 text-primary mx-auto mb-2" />
-              <p className="font-semibold text-foreground mb-1">Complete Your Self-Assessment</p>
-              <p className="text-xs text-muted-foreground mb-3">
-                Get your personalized rating, badge, and custom training program
-              </p>
-              <Button className="w-full">Start Assessment</Button>
-            </CardContent>
-          </Card>
-        )}
 
         {/* Profile Quick Info */}
         {profile && <Card className="bg-card border-border shadow-sm cursor-pointer active:scale-95 transition-transform"
