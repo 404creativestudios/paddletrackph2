@@ -8,51 +8,51 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 40 25% 96%;
-    --foreground: 0 0% 10%;
+    --background: 0 0% 96.5%;
+    --foreground: 0 0% 9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 10%;
+    --card-foreground: 0 0% 9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 10%;
+    --popover-foreground: 0 0% 9%;
 
-    /* Professional gold & red palette inspired by career platform */
-    --primary: 42 78% 52%;
-    --primary-foreground: 0 0% 10%;
+    /* Primary blue from design system #2b8cee */
+    --primary: 208 79% 55%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 63% 51%;
+    --secondary: 240 5% 65%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 40 20% 92%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%;
 
-    --accent: 42 85% 45%;
-    --accent-foreground: 0 0% 10%;
+    --accent: 208 79% 55%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 63% 51%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 40 15% 88%;
-    --input: 40 15% 88%;
-    --ring: 42 78% 52%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 208 79% 55%;
 
-    --radius: 0.75rem;
-    
-    --success: 142 76% 36%;
+    --radius: 1rem;
+
+    --success: 142 71% 45%;
     --warning: 38 92% 50%;
-    --info: 200 85% 50%;
-    
-    /* Professional gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(42 78% 52%), hsl(42 85% 45%));
-    --gradient-secondary: linear-gradient(135deg, hsl(0 63% 51%), hsl(0 70% 45%));
-    --gradient-hero: linear-gradient(180deg, hsl(40 25% 96%), hsl(42 30% 94%));
-    
-    /* Enhanced shadows */
+    --info: 208 79% 55%;
+
+    /* Design system gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(208 79% 55%), hsl(208 85% 45%));
+    --gradient-secondary: linear-gradient(135deg, hsl(240 5% 65%), hsl(240 5% 55%));
+    --gradient-hero: linear-gradient(180deg, hsl(0 0% 96.5%), hsl(240 5% 96%));
+
+    /* Soft shadows */
     --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
     --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.1);
     --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.1);
-    --shadow-glow: 0 0 20px hsl(42 78% 52% / 0.3);
+    --shadow-glow: 0 0 20px hsl(208 79% 55% / 0.3);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -65,46 +65,46 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 0 0% 10%;
-    --foreground: 40 25% 96%;
+    --background: 210 11% 10%;
+    --foreground: 0 0% 96%;
 
-    --card: 0 0% 13%;
-    --card-foreground: 40 25% 96%;
+    --card: 210 11% 15%;
+    --card-foreground: 0 0% 96%;
 
-    --popover: 0 0% 13%;
-    --popover-foreground: 40 25% 96%;
+    --popover: 210 11% 15%;
+    --popover-foreground: 0 0% 96%;
 
-    --primary: 42 78% 52%;
-    --primary-foreground: 0 0% 10%;
+    --primary: 208 79% 55%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 63% 51%;
+    --secondary: 240 4% 46%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 0 0% 18%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 240 5% 25%;
+    --muted-foreground: 240 5% 65%;
 
-    --accent: 42 85% 45%;
-    --accent-foreground: 0 0% 10%;
+    --accent: 208 79% 55%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 63% 51%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 18%;
-    --input: 0 0% 18%;
-    --ring: 42 78% 52%;
-    
-    --success: 142 76% 36%;
-    --warning: 38 90% 45%;
-    --info: 200 80% 45%;
-    
-    --gradient-primary: linear-gradient(135deg, hsl(42 78% 52%), hsl(42 85% 45%));
-    --gradient-secondary: linear-gradient(135deg, hsl(0 63% 51%), hsl(0 70% 45%));
-    --gradient-hero: linear-gradient(180deg, hsl(0 0% 10%), hsl(42 20% 15%));
-    
-    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.3);
-    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.4);
-    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.5);
-    --shadow-glow: 0 0 20px hsl(42 78% 52% / 0.4);
+    --border: 240 4% 16%;
+    --input: 240 4% 16%;
+    --ring: 208 79% 55%;
+
+    --success: 142 71% 45%;
+    --warning: 38 90% 50%;
+    --info: 208 79% 55%;
+
+    --gradient-primary: linear-gradient(135deg, hsl(208 79% 55%), hsl(208 85% 45%));
+    --gradient-secondary: linear-gradient(135deg, hsl(240 4% 46%), hsl(240 4% 36%));
+    --gradient-hero: linear-gradient(180deg, hsl(210 11% 10%), hsl(210 11% 15%));
+
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.5);
+    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.6);
+    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.7);
+    --shadow-glow: 0 0 20px hsl(208 79% 55% / 0.4);
   }
 }
 
@@ -116,6 +116,15 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "cv11", "ss01";
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24;
   }
 }
 

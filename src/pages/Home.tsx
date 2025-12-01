@@ -9,6 +9,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, Trophy, Target, TrendingUp, Calendar, LogOut, Zap, Clock, MapPin, Award, Users, Search, UserPlus, Bell, Activity, Edit } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
+import BottomNav from "@/components/BottomNav";
+import FloatingActionButton from "@/components/FloatingActionButton";
+import StatCard from "@/components/StatCard";
+import ListItemCard from "@/components/ListItemCard";
 interface Profile {
   username: string;
   display_name: string;
@@ -207,35 +211,44 @@ export default function Home() {
     }
   };
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center bg-gradient-hero">
+    return <div className="min-h-screen flex items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>;
   }
-  return <div className="min-h-full bg-gradient-hero">
-      {/* App-style Top Bar */}
-      <div className="sticky top-0 z-40 bg-card/80 backdrop-blur-lg border-b border-border">
-        <div className="flex items-center justify-between px-4 h-14">
-          <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10 border-2 border-primary/20">
+
+  const getInitials = (name: string) => {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  };
+
+  return <div className="relative flex min-h-screen w-full flex-col bg-background pb-32">
+      <main className="flex-1">
+        {/* Top App Bar */}
+        <div className="flex items-center p-4">
+          <div className="flex items-center gap-4 flex-1">
+            <Avatar className="h-12 w-12 rounded-full">
               <AvatarImage src={profile?.avatar_url || ""} alt={profile?.display_name} />
-              <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-white text-sm">
-                {profile?.display_name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+              <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-white">
+                {getInitials(profile?.display_name || "")}
               </AvatarFallback>
             </Avatar>
-            <div>
-              <h1 className="text-lg font-bold bg-gradient-primary bg-clip-text text-transparent">
-                PaddleTrack PH
+            <div className="flex flex-col">
+              <h1 className="text-zinc-800 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">
+                {profile?.display_name}
               </h1>
-              <p className="text-xs text-muted-foreground">
-                Hey, {profile?.display_name?.split(' ')[0]}! 👋
+              <p className="text-zinc-500 dark:text-zinc-400 text-sm font-medium leading-normal">
+                {profile?.displayed_rating ? `${profile.displayed_rating.toFixed(1)} Rating` : "No Rating"}
               </p>
             </div>
           </div>
-          <Button variant="ghost" size="icon" onClick={signOut} className="h-9 w-9">
-            <LogOut className="h-4 w-4" />
-          </Button>
+          <div className="flex items-center justify-end">
+            <button
+              onClick={() => navigate("/activity-feed")}
+              className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 w-12 bg-transparent text-zinc-800 dark:text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0"
+            >
+              <span className="material-symbols-outlined text-2xl">notifications</span>
+            </button>
+          </div>
         </div>
-      </div>
 
       <div className="px-4 py-6 space-y-6">
 
@@ -308,60 +321,32 @@ export default function Home() {
         </Card>
 
         {/* Stats Dashboard */}
-        <div className="space-y-3">
-          <h2 className="text-lg font-bold text-foreground flex items-center gap-2 px-1">
-            <Zap className="h-5 w-5 text-primary" />
-            Performance
-          </h2>
-          <div className="grid grid-cols-2 gap-3">
-            <Card className="active:scale-95 transition-transform bg-card border-border shadow-sm">
-              <CardContent className="p-4 text-center">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 mb-2">
-                  <Calendar className="h-5 w-5 text-primary" />
-                </div>
-                <p className="text-3xl font-bold text-foreground mb-0.5">{stats.totalGames}</p>
-                <p className="text-xs text-muted-foreground font-medium">Games</p>
-              </CardContent>
-            </Card>
-
-            <Card className="active:scale-95 transition-transform bg-card border-border shadow-sm">
-              <CardContent className="p-4 text-center">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-success/10 mb-2">
-                  <Trophy className="h-5 w-5 text-success" />
-                </div>
-                <p className="text-3xl font-bold text-success mb-0.5">{stats.wins}</p>
-                <p className="text-xs text-muted-foreground font-medium">Wins</p>
-              </CardContent>
-            </Card>
-
-            <Card className="active:scale-95 transition-transform bg-card border-border shadow-sm">
-              <CardContent className="p-4 text-center">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-destructive/10 mb-2">
-                  <Target className="h-5 w-5 text-destructive" />
-                </div>
-                <p className="text-3xl font-bold text-destructive mb-0.5">{stats.losses}</p>
-                <p className="text-xs text-muted-foreground font-medium">Losses</p>
-              </CardContent>
-            </Card>
-
-            <Card className="active:scale-95 transition-transform bg-card border-border shadow-sm">
-              <CardContent className="p-4 text-center">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-accent/10 mb-2">
-                  <TrendingUp className="h-5 w-5 text-accent" />
-                </div>
-                <p className="text-3xl font-bold text-accent mb-0.5">{stats.winRate}%</p>
-                <p className="text-xs text-muted-foreground font-medium">Win Rate</p>
-              </CardContent>
-            </Card>
-          </div>
+        <div className="flex flex-wrap gap-4 px-4">
+          <StatCard
+            title="Total Wins"
+            value={stats.wins}
+            change={stats.totalGames > 0 ? `${Math.round((stats.wins / stats.totalGames) * 100)}%` : "0%"}
+            changeType="positive"
+          />
+          <StatCard
+            title="Win %"
+            value={`${stats.winRate}%`}
+            change={`${stats.wins}W / ${stats.losses}L`}
+            changeType="neutral"
+          />
+          <StatCard
+            title="Total Games"
+            value={stats.totalGames}
+            change="Completed"
+            changeType="neutral"
+          />
         </div>
 
         {/* Scheduled Games */}
         {scheduledGames.length > 0 && <div className="space-y-3">
-            <h2 className="text-lg font-bold text-foreground flex items-center gap-2 px-1">
-              <Clock className="h-5 w-5 text-accent" />
-              Scheduled
-            </h2>
+            <h3 className="text-zinc-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">
+              Scheduled Games
+            </h3>
             <div className="grid gap-3">
               {scheduledGames.map(game => <Card key={game.id} className="active:scale-95 cursor-pointer bg-card border-border shadow-sm transition-transform" onClick={() => navigate(`/lobby/${game.id}`)}>
                   <CardContent className="p-4">
@@ -541,5 +526,9 @@ export default function Home() {
             </CardContent>
           </Card>}
       </div>
+      </main>
+
+      <FloatingActionButton href="/start-game" />
+      <BottomNav />
     </div>;
 }
