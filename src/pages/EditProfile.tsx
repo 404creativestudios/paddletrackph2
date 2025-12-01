@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, ArrowLeft, Save, Moon, Sun, Monitor } from "lucide-react";
+import { Loader2, ArrowLeft, Save, Moon, Sun, Monitor, LogOut } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import AvatarUpload from "@/components/AvatarUpload";
 
@@ -22,12 +22,29 @@ export default function EditProfile() {
   const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     loadProfile();
   }, [user]);
+
+  const handleLogout = async () => {
+    if (!window.confirm("Are you sure you want to log out?")) {
+      return;
+    }
+
+    try {
+      await signOut();
+      navigate("/login");
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to log out",
+        variant: "destructive",
+      });
+    }
+  };
 
   const loadProfile = async () => {
     if (!user) return;
@@ -275,6 +292,20 @@ export default function EditProfile() {
             </CardContent>
           </Card>
         </form>
+
+        <Card className="border-destructive/50">
+          <CardContent className="pt-6">
+            <Button
+              type="button"
+              variant="destructive"
+              className="w-full"
+              onClick={handleLogout}
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Log Out
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
