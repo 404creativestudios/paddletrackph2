@@ -160,14 +160,23 @@ export default function Home() {
 
       setPaddlePalRequestsCount(count || 0);
 
-      const { data: paddlePals, error: palsError } = await supabase
+      const { data: paddlePalsSent, error: palsSentError } = await supabase
         .from("paddle_pals")
-        .select("pal_id")
-        .eq("user_id", user.id)
+        .select("receiver_id")
+        .eq("sender_id", user.id)
         .eq("status", "accepted");
 
-      if (!palsError && paddlePals) {
-        const paddlePalIds = paddlePals.map((p) => p.pal_id);
+      const { data: paddlePalsReceived, error: palsReceivedError } = await supabase
+        .from("paddle_pals")
+        .select("sender_id")
+        .eq("receiver_id", user.id)
+        .eq("status", "accepted");
+
+      if (!palsSentError && !palsReceivedError) {
+        const paddlePalIds = [
+          ...(paddlePalsSent?.map((p) => p.receiver_id) || []),
+          ...(paddlePalsReceived?.map((p) => p.sender_id) || []),
+        ];
 
         if (paddlePalIds.length > 0) {
           const fourHoursAgo = new Date();

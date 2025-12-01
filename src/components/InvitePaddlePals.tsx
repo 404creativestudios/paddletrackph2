@@ -87,9 +87,31 @@ export default function InvitePaddlePals({ lobbyId, currentPlayers, onPlayerAdde
     setInviting(palId);
 
     try {
+      const { data: lobbyData } = await supabase
+        .from("practice_lobbies")
+        .select("match_format")
+        .eq("id", lobbyId)
+        .single();
+
+      const { data: existingPlayers } = await supabase
+        .from("lobby_players")
+        .select("team")
+        .eq("lobby_id", lobbyId);
+
+      const teamACount = existingPlayers?.filter((p) => p.team === "A").length || 0;
+      const teamBCount = existingPlayers?.filter((p) => p.team === "B").length || 0;
+
+      let assignedTeam = "B";
+      if (lobbyData?.match_format === "Singles") {
+        assignedTeam = "B";
+      } else {
+        assignedTeam = teamACount <= teamBCount ? "A" : "B";
+      }
+
       const { error } = await supabase.from("lobby_players").insert({
         lobby_id: lobbyId,
         user_id: palId,
+        team: assignedTeam,
         is_creator: false,
         has_confirmed: false,
       });

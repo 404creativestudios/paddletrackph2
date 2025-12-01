@@ -61,15 +61,26 @@ export default function ActivityFeed() {
       const cutoffTime = new Date();
       cutoffTime.setHours(cutoffTime.getHours() - 72);
 
-      const { data: paddlePals, error: palsError } = await supabase
+      const { data: paddlePalsSent, error: palsSentError } = await supabase
         .from("paddle_pals")
-        .select("pal_id")
-        .eq("user_id", user.id)
+        .select("receiver_id")
+        .eq("sender_id", user.id)
         .eq("status", "accepted");
 
-      if (palsError) throw palsError;
+      if (palsSentError) throw palsSentError;
 
-      const paddlePalIds = paddlePals?.map((p) => p.pal_id) || [];
+      const { data: paddlePalsReceived, error: palsReceivedError } = await supabase
+        .from("paddle_pals")
+        .select("sender_id")
+        .eq("receiver_id", user.id)
+        .eq("status", "accepted");
+
+      if (palsReceivedError) throw palsReceivedError;
+
+      const paddlePalIds = [
+        ...(paddlePalsSent?.map((p) => p.receiver_id) || []),
+        ...(paddlePalsReceived?.map((p) => p.sender_id) || []),
+      ];
 
       const { data, error } = await supabase
         .from("profiles")
