@@ -11,9 +11,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  Loader2, ArrowLeft, UserPlus, CheckCircle2, Trophy, BookOpen, 
-  MapPin, Calendar, Clock, Tag, Users, Target, Zap, CalendarPlus
+import {
+  Loader2, ArrowLeft, UserPlus, CheckCircle2, Trophy, BookOpen,
+  MapPin, Calendar, Clock, Tag, Users, Target, Zap, CalendarPlus, X
 } from "lucide-react";
 import { format } from "date-fns";
 import QuickAddPlayer from "@/components/QuickAddPlayer";
@@ -144,6 +144,18 @@ export default function LobbyDetail() {
   };
 
   const handleAddRegisteredPlayer = async (user: { id: string; username: string; display_name: string }) => {
+    if (!lobby) return;
+
+    const maxPlayers = lobby.match_format === "Singles" ? 2 : 4;
+    if (players.length >= maxPlayers) {
+      toast({
+        title: "Lobby Full",
+        description: `${lobby.match_format} games can only have ${maxPlayers} players`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -178,10 +190,21 @@ export default function LobbyDetail() {
   };
 
   const handleAddGuestPlayer = async (guestData: { name: string; skill_level?: string; city?: string }) => {
+    if (!lobby) return;
+
+    const maxPlayers = lobby.match_format === "Singles" ? 2 : 4;
+    if (players.length >= maxPlayers) {
+      toast({
+        title: "Lobby Full",
+        description: `${lobby.match_format} games can only have ${maxPlayers} players`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     setSubmitting(true);
 
     try {
-      // First create the guest player
       const { data: guestPlayer, error: guestError } = await supabase
         .from("guest_players")
         .insert({
@@ -195,7 +218,6 @@ export default function LobbyDetail() {
 
       if (guestError) throw guestError;
 
-      // Then add them to the lobby
       const assignedTeam = lobby?.match_format === "Singles" ? "B" : selectedTeam;
 
       const { error: lobbyError } = await supabase.from("lobby_players").insert({
@@ -224,6 +246,57 @@ export default function LobbyDetail() {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleRemovePlayer = async (playerId: string, playerName: string) => {
+    if (!lobby) return;
+
+    const currentPlayerCount = players.length;
+    const maxPlayers = lobby.match_format === "Singles" ? 2 : 4;
+
+    if (!window.confirm(`Remove ${playerName} from this game?`)) {
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      const { error } = await supabase
+        .from("lobby_players")
+        .delete()
+        .eq("id", playerId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Player Removed",
+        description: `${playerName} has been removed from the game`,
+      });
+
+      loadLobbyData();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to remove player",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const canRemovePlayer = (player: PlayerData): boolean => {
+    if (!lobby || !user) return false;
+    if (player.is_creator) return false;
+    if (lobby.status !== "pending") return false;
+    if (lobby.created_by_user_id !== user.id) return false;
+    return true;
+  };
+
+  const canAddMorePlayers = (): boolean => {
+    if (!lobby) return false;
+    const maxPlayers = lobby.match_format === "Singles" ? 2 : 4;
+    return players.length < maxPlayers && lobby.status === "pending";
   };
 
   const handleApproveScore = async () => {
@@ -652,6 +725,16 @@ export default function LobbyDetail() {
                               <span className="text-xs text-muted-foreground">Pending</span>
                             </div>
                           ) : null}
+                          {canRemovePlayer(player) && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleRemovePlayer(player.id, displayName || "Player")}
+                              className="h-7 w-7 p-0 hover:bg-destructive/10 hover:text-destructive"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          )}
                         </div>
                       </div>
                     );
@@ -696,6 +779,16 @@ export default function LobbyDetail() {
                                 <span className="text-xs text-muted-foreground">Pending</span>
                               </div>
                             ) : null}
+                            {canRemovePlayer(player) && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleRemovePlayer(player.id, displayName || "Player")}
+                                className="h-7 w-7 p-0 hover:bg-destructive/10 hover:text-destructive"
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            )}
                           </div>
                         </div>
                       );
@@ -710,12 +803,12 @@ export default function LobbyDetail() {
         </Card>
 
         {/* Add Player */}
-        {lobby.status === "pending" && (
+        {lobby.status === "pending" && canAddMorePlayers() && (
           <Card className="shadow-lg border-none bg-gradient-card animate-slide-up" style={{ animationDelay: "0.2s" }}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <UserPlus className="h-5 w-5 text-primary" />
-                Add Player
+                Add Player ({players.length}/{lobby.match_format === "Singles" ? "2" : "4"})
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -749,12 +842,24 @@ export default function LobbyDetail() {
         )}
 
         {/* Invite Paddle Pals */}
-        {isCreator && lobby.status === "pending" && (
+        {isCreator && lobby.status === "pending" && canAddMorePlayers() && (
           <InvitePaddlePals
             lobbyId={lobbyId!}
             currentPlayers={players.map(p => p.user_id).filter(Boolean) as string[]}
             onPlayerAdded={loadLobbyData}
           />
+        )}
+
+        {/* Lobby Full Message */}
+        {lobby.status === "pending" && !canAddMorePlayers() && (
+          <Card className="bg-muted/50 border-primary/30">
+            <CardContent className="p-4">
+              <p className="text-sm text-center text-muted-foreground">
+                This {lobby.match_format} game is full ({players.length}/{lobby.match_format === "Singles" ? "2" : "4"} players).
+                {isCreator && " You can remove players to add new ones."}
+              </p>
+            </CardContent>
+          </Card>
         )}
 
         {/* Approve Score - Only for Tournaments and non-guest registered players */}
