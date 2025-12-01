@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, ArrowLeft, MapPin, Award, UserPlus, Check, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -12,6 +13,7 @@ interface Profile {
   id: string;
   username: string;
   display_name: string;
+  avatar_url: string | null;
   badge_name: string | null;
   city: string | null;
   is_profile_public: boolean;
@@ -43,7 +45,7 @@ export default function PublicProfile() {
     try {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, username, display_name, badge_name, city, is_profile_public, displayed_rating")
+        .select("id, username, display_name, avatar_url, badge_name, city, is_profile_public, displayed_rating")
         .eq("id", userId)
         .single();
 
@@ -223,14 +225,22 @@ export default function PublicProfile() {
 
         <Card className="overflow-hidden">
           <div className="bg-gradient-primary h-24" />
-          <CardContent className="p-6 -mt-8 space-y-6">
+          <CardContent className="p-6 -mt-16 space-y-6">
             <div className="flex items-end justify-between">
-              <div className="space-y-2">
-                <h1 className="text-3xl font-bold">{profile.display_name}</h1>
-                <p className="text-muted-foreground">@{profile.username}</p>
+              <div className="flex items-end gap-4">
+                <Avatar className="h-24 w-24 border-4 border-background shadow-xl">
+                  <AvatarImage src={profile.avatar_url || ""} alt={profile.display_name} />
+                  <AvatarFallback className="text-2xl font-bold bg-gradient-to-br from-primary to-accent text-white">
+                    {profile.display_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="space-y-1 mb-1">
+                  <h1 className="text-2xl font-bold">{profile.display_name}</h1>
+                  <p className="text-muted-foreground">@{profile.username}</p>
+                </div>
               </div>
               {profile.badge_name && (
-                <Badge variant="secondary" className="text-sm px-3 py-1.5 flex items-center gap-2">
+                <Badge variant="secondary" className="text-sm px-3 py-1.5 flex items-center gap-2 mb-1">
                   <Award className="h-4 w-4" />
                   {profile.badge_name}
                 </Badge>

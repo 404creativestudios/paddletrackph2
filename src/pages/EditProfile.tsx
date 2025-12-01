@@ -9,11 +9,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Switch } from "@/components/ui/switch";
 import { Loader2, ArrowLeft, Save } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import AvatarUpload from "@/components/AvatarUpload";
 
 export default function EditProfile() {
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [city, setCity] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isPublic, setIsPublic] = useState(true);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -31,7 +33,7 @@ export default function EditProfile() {
     try {
       const { data, error } = await supabase
         .from("profiles")
-        .select("username, display_name, city, is_profile_public")
+        .select("username, display_name, city, avatar_url, is_profile_public")
         .eq("id", user.id)
         .single();
 
@@ -41,6 +43,7 @@ export default function EditProfile() {
         setUsername(data.username || "");
         setDisplayName(data.display_name || "");
         setCity(data.city || "");
+        setAvatarUrl(data.avatar_url);
         setIsPublic(data.is_profile_public ?? true);
       }
     } catch (error: any) {
@@ -143,6 +146,15 @@ export default function EditProfile() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+              <div className="flex justify-center py-4">
+                <AvatarUpload
+                  currentAvatarUrl={avatarUrl}
+                  userId={user?.id || ""}
+                  displayName={displayName}
+                  onUploadComplete={(url) => setAvatarUrl(url)}
+                />
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="username">
                   Username <span className="text-destructive">*</span>

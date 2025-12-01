@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, Search, MapPin, Award, ArrowLeft, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -13,6 +14,7 @@ interface SearchResult {
   id: string;
   username: string;
   display_name: string;
+  avatar_url: string | null;
   badge_name: string | null;
   city: string | null;
 }
@@ -42,7 +44,7 @@ export default function SearchPlayers() {
     try {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, username, display_name, badge_name, city")
+        .select("id, username, display_name, avatar_url, badge_name, city")
         .eq("is_profile_public", true)
         .neq("id", user?.id)
         .or(`username.ilike.%${searchQuery}%,display_name.ilike.%${searchQuery}%`)
@@ -122,9 +124,23 @@ export default function SearchPlayers() {
                 onClick={() => navigate(`/profile/${player.id}`)}
               >
                 <CardContent className="p-4">
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-1">
-                      <h3 className="font-bold text-lg">{player.display_name}</h3>
+                  <div className="flex items-start gap-3">
+                    <Avatar className="h-12 w-12 border-2 border-primary/20">
+                      <AvatarImage src={player.avatar_url || ""} alt={player.display_name} />
+                      <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-white">
+                        {player.display_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 space-y-1">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-bold text-lg">{player.display_name}</h3>
+                        {player.badge_name && (
+                          <Badge variant="secondary" className="flex items-center gap-1 text-xs">
+                            <Award className="h-3 w-3" />
+                            {player.badge_name}
+                          </Badge>
+                        )}
+                      </div>
                       <p className="text-sm text-muted-foreground">@{player.username}</p>
                       {player.city && (
                         <div className="flex items-center gap-1 text-sm text-muted-foreground">
@@ -133,12 +149,6 @@ export default function SearchPlayers() {
                         </div>
                       )}
                     </div>
-                    {player.badge_name && (
-                      <Badge variant="secondary" className="flex items-center gap-1">
-                        <Award className="h-3 w-3" />
-                        {player.badge_name}
-                      </Badge>
-                    )}
                   </div>
                 </CardContent>
               </Card>

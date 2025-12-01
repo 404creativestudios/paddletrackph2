@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, Trophy, Target, TrendingUp, Calendar, LogOut, Zap, Clock, MapPin, Award, Users, Search, UserPlus, Bell, Activity, Edit } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
@@ -13,6 +14,7 @@ interface Profile {
   display_name: string;
   skill_level: string | null;
   city: string | null;
+  avatar_url: string | null;
   self_assessed_level: string | null;
   displayed_rating: number | null;
   badge_name: string | null;
@@ -213,13 +215,21 @@ export default function Home() {
       {/* App-style Top Bar */}
       <div className="sticky top-0 z-40 bg-card/80 backdrop-blur-lg border-b border-border">
         <div className="flex items-center justify-between px-4 h-14">
-          <div>
-            <h1 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-              PaddleTrack PH 
-            </h1>
-            <p className="text-xs text-muted-foreground">
-              Hey, {profile?.display_name?.split(' ')[0]}! 👋
-            </p>
+          <div className="flex items-center gap-3">
+            <Avatar className="h-10 w-10 border-2 border-primary/20">
+              <AvatarImage src={profile?.avatar_url || ""} alt={profile?.display_name} />
+              <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-white text-sm">
+                {profile?.display_name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <h1 className="text-lg font-bold bg-gradient-primary bg-clip-text text-transparent">
+                PaddleTrack PH
+              </h1>
+              <p className="text-xs text-muted-foreground">
+                Hey, {profile?.display_name?.split(' ')[0]}! 👋
+              </p>
+            </div>
           </div>
           <Button variant="ghost" size="icon" onClick={signOut} className="h-9 w-9">
             <LogOut className="h-4 w-4" />
