@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, ArrowLeft, Save } from "lucide-react";
+import { Loader2, ArrowLeft, Save, Moon, Sun, Monitor } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import AvatarUpload from "@/components/AvatarUpload";
 
@@ -22,6 +23,7 @@ export default function EditProfile() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     loadProfile();
@@ -33,7 +35,7 @@ export default function EditProfile() {
     try {
       const { data, error } = await supabase
         .from("profiles")
-        .select("username, display_name, city, avatar_url, is_profile_public")
+        .select("username, display_name, city, avatar_url, is_profile_public, theme_preference")
         .eq("id", user.id)
         .single();
 
@@ -216,6 +218,51 @@ export default function EditProfile() {
                   </p>
                 </div>
               )}
+
+              <div className="space-y-3">
+                <Label>Theme Preference</Label>
+                <div className="grid grid-cols-3 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setTheme("light")}
+                    className={`flex flex-col items-center gap-2 p-4 border rounded-lg transition-colors ${
+                      theme === "light"
+                        ? "border-primary bg-primary/10"
+                        : "border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700"
+                    }`}
+                  >
+                    <Sun className="h-5 w-5" />
+                    <span className="text-sm font-medium">Light</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTheme("dark")}
+                    className={`flex flex-col items-center gap-2 p-4 border rounded-lg transition-colors ${
+                      theme === "dark"
+                        ? "border-primary bg-primary/10"
+                        : "border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700"
+                    }`}
+                  >
+                    <Moon className="h-5 w-5" />
+                    <span className="text-sm font-medium">Dark</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTheme("system")}
+                    className={`flex flex-col items-center gap-2 p-4 border rounded-lg transition-colors ${
+                      theme === "system"
+                        ? "border-primary bg-primary/10"
+                        : "border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700"
+                    }`}
+                  >
+                    <Monitor className="h-5 w-5" />
+                    <span className="text-sm font-medium">System</span>
+                  </button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Choose how PaddleTrack PH looks to you. System uses your device's theme preference.
+                </p>
+              </div>
 
               <Button type="submit" className="w-full" disabled={saving}>
                 {saving ? (
