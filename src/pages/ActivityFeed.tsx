@@ -176,7 +176,7 @@ export default function ActivityFeed() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate(`/profile/${activity.username}`)}
+            onClick={() => navigate(`/profile/${activity.id}`)}
             className="flex-1"
           >
             <User className="w-4 h-4 mr-2" />
