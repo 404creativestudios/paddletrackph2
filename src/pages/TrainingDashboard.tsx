@@ -146,7 +146,7 @@ export default function TrainingDashboard() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <TrendingUp className="h-5 w-5 text-primary" />
-              Two-Week Training Program
+              Your Training Program
             </CardTitle>
           </CardHeader>
           <CardContent>

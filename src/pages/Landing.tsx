@@ -253,7 +253,7 @@ const Landing = () => {
             }, {
               icon: BookOpen,
               title: "Personal Training Program",
-              description: "Receive a customised two-week training program generated from your assessment. Focus on your weak areas with drills, warm-ups, and game patterns designed for your growth."
+              description: "Receive a customised module-based training program generated from your assessment. Progress at your own pace through focused modules targeting your weak areas with drills, warm-ups, and game patterns designed for your growth."
             }, {
               icon: UserPlus,
               title: "Public Profiles and Paddle Pals",
